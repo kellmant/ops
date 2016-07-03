@@ -210,7 +210,7 @@ case ${TERM} in
         PS1=${PS1}"\[\e]0;[\u@\h] \w\a\]"
         ;;
     *)
-        PS1="[\u:\W]>" # --> PS1="(\A \u@\h \w) > "
+        PS1="[\h:\W]>" # --> PS1="(\A \u@\h \w) > "
                                # --> Shows full pathname of current dir.
         ;;
 esac
