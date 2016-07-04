@@ -150,8 +150,10 @@ fi
 # Test user type:
 if [[ ${USER} == "root" ]]; then
     SU=${Red}           # User is root.
-elif [[ ${USER} != $(logname) ]]; then
-    SU=${BRed}          # User is not login user.
+elif [[ ${USER} != "core" ]]; then
+    SU=${Green}          # User is not login user.
+elif [[ ${USER} != "kellman" ]]; then
+    SU=${BBlue}          # User is not login user.
 else
     SU=${BCyan}         # User is normal (well ... most of us are).
 fi
@@ -192,25 +194,23 @@ function job_color()
 
 # Adds some text in the terminal frame (if applicable).
 
+export PS1=""
 
 # Now we construct the prompt.
 PROMPT_COMMAND="history -a"
 case ${TERM} in
   *term | rxvt | linux)
-        PS1="\[\$(load_color)\][\A\[${NC}\] "
-        # Time of day (with load info):
-        PS1="\[\$(load_color)\][\A\[${NC}\] "
         # User@Host (with connection type info):
-        PS1=${PS1}"\[${SU}\]\u\[${NC}\]@\[${CNX}\]\h\[${NC}\] "
+        PS1=${PS1}"\[${SU}\]\h\[${NC}\]:\[${CNX}\]\@\[${NC}\]"
         # PWD (with 'disk space' info):
-        PS1=${PS1}"\[\$(disk_color)\]\W]\[${NC}\] "
+        PS1=${PS1}"\[\$(disk_color)\]\w]\[${NC}\]"
         # Prompt (with 'job' info):
-        PS1=${PS1}"\[\$(job_color)\]>\[${NC}\] "
+        PS1=${PS1}"\[\$(job_color)\]>\[${NC}\]"
         # Set title of current xterm:
         PS1=${PS1}"\[\e]0;[\u@\h] \w\a\]"
         ;;
     *)
-        PS1="[\h:\W]>" # --> PS1="(\A \u@\h \w) > "
+        PS1="[\h:\j:\W]>" # --> PS1="(\A \u@\h \w) > "
                                # --> Shows full pathname of current dir.
         ;;
 esac
