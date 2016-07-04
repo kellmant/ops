@@ -1,0 +1,16 @@
+#!/bin/bash
+tput clear
+
+while tput home; do
+arr=($(fleetctl list-units | awk '{ print $1 }' | grep service | cut -d. -f 1))
+
+#$*
+#tput ed
+
+	for (( i = 0; i < ${#arr[@]} ; i++ )); do
+	tput clear
+        eval "fleetctl status ${arr[$i]}"
+	sleep 6
+	done
+
+done
