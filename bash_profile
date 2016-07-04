@@ -747,4 +747,5 @@ complete -F _killall killall killps
 # mode:shell-script
 # sh-shell:bash
 # End:
-export CLICOLOR="true"
+export CLICOLOR=1
+export LSCOLORS=ExFxBxDxCxegedabagacad
