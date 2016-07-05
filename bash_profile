@@ -201,15 +201,15 @@ PROMPT_COMMAND="history -a"
 case ${TERM} in
   *term* | rxvt | linux)
 	# mark last output
-        PS1=${PS1}"\[${Yellow}\]<=\[${NC}\]\n"
+        PS1=${PS1}"\[${BWhite}\]<=\[${NC}\]\n"
         # Start with time of day
         PS1=${PS1}"\n\[${Purple}\]\d \@\[${NC}\]"
 	# put some user and host info in.
-        PS1=${PS1}"\n\[${Cyan}\]\u\[${NC}\]@\[${BCyan}\]\h\[${NC}\]"
+        PS1=${PS1}"\n\[${Cyan}\]\u\[${NC}\]@\[${BRed}\]\h\[${NC}\]"
 	# place directory we are working in above the prompt
 	PS1=${PS1}"\n\[${BGreen}\][\w]\[${NC}\]"
 	# set the prompt
-	PS1=${PS1}"\n\[${BYellow}\]=>\[${NC}\]"
+	PS1=${PS1}"\n\[${BWhite}\]=>\[${NC}\]"
         # Set title of current xterm:
         PS1=${PS1}"\[\e]0;[\u@\h] \w\a\]"
         ;;
