@@ -199,18 +199,22 @@ export PS1=""
 # Now we construct the prompt.
 PROMPT_COMMAND="history -a"
 case ${TERM} in
-  *term | rxvt | linux)
-        # User@Host (with connection type info):
-        PS1=${PS1}"\[${SU}\]\h\[${NC}\]:\[${CNX}\]\@\[${NC}\]"
-        # PWD (with 'disk space' info):
-        PS1=${PS1}"\[\$(disk_color)\]\w]\[${NC}\]"
-        # Prompt (with 'job' info):
-        PS1=${PS1}"\[\$(job_color)\]>\[${NC}\]"
+  *term* | rxvt | linux)
+	# mark last output
+        PS1=${PS1}"\[${Yellow}\]<=\[${NC}\]\n"
+        # Start with time of day
+        PS1=${PS1}"\n\[${Purple}\]\d \@\[${NC}\]"
+	# put some user and host info in.
+        PS1=${PS1}"\n\[${Cyan}\]\u\[${NC}\]@\[${BCyan}\]\h\[${NC}\]"
+	# place directory we are working in above the prompt
+	PS1=${PS1}"\n\[${BGreen}\][\w]\[${NC}\]"
+	# set the prompt
+	PS1=${PS1}"\n\[${BYellow}\]=>\[${NC}\]"
         # Set title of current xterm:
         PS1=${PS1}"\[\e]0;[\u@\h] \w\a\]"
         ;;
     *)
-        PS1="[\h:\j:\W]>" # --> PS1="(\A \u@\h \w) > "
+        PS1="\n[\w:\u@\h:\d \@]\n\$=>" # --> PS1="(\A \u@\h \w) > "
                                # --> Shows full pathname of current dir.
         ;;
 esac
@@ -748,4 +752,5 @@ complete -F _killall killall killps
 # sh-shell:bash
 # End:
 export CLICOLOR=1
-export LSCOLORS=ExFxBxDxCxegedabagacad
+#export LSCOLORS=ExFxBxDxCxegedabagacad
+export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
