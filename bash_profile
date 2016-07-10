@@ -149,10 +149,10 @@ fi
 
 # Test user type:
 if [[ ${USER} == "root" ]]; then
-    SU=${Red}           # User is root.
-elif [[ ${USER} != "core" ]]; then
+    SU=${BRed}           # User is root.
+elif [[ ${USER} == "core" ]]; then
     SU=${Green}          # User is not login user.
-elif [[ ${USER} != "kellman" ]]; then
+elif [[ ${USER} == "kellman" ]]; then
     SU=${BBlue}          # User is not login user.
 else
     SU=${BCyan}         # User is normal (well ... most of us are).
@@ -161,26 +161,27 @@ fi
 
 
 # Returns a color according to free disk space in $PWD.
-function disk_color()
-{
-    if [ ! -w "${PWD}" ] ; then
-        echo -en ${Red}
-        # No 'write' privilege in the current directory.
-    elif [ -s "${PWD}" ] ; then
-        local used=$(command df -P "$PWD" |
-                   awk 'END {print $5} {sub(/%/,"")}')
-        if [ ${used} -gt 95 ]; then
-            echo -en ${ALERT}           # Disk almost full (>95%).
-        elif [ ${used} -gt 90 ]; then
-            echo -en ${BRed}            # Free disk space almost gone.
-        else
-            echo -en ${Green}           # Free disk space is ok.
-        fi
-    else
-        echo -en ${Cyan}
-        # Current directory is size '0' (like /proc, /sys etc).
-    fi
-}
+#function disk_color()
+#{
+#    if [ ! -w "${PWD}" ] ; then
+#        diskcolor="${Red}"
+#        # No 'write' privilege in the current directory.
+#    elif [ -s "${PWD}" ] ; then
+#        local used=$(command df -P "$PWD" | awk 'END {print $5} {sub(/%/,"")}')
+#	used=${used%\%}
+#
+##        if [ ${used} -gt 95 ]; then
+#            diskcolor="\${BRed}"   # Disk almost full (>95%).
+#        elif [ ${used} -gt 90 ]; then
+#            diskcolor="\${Red}"            # Free disk space almost gone.
+#        else
+#            diskcolor="\${Green}"           # Free disk space is ok.
+#        fi
+#    else
+#        diskcolor="\${Cyan}"
+#        # Current directory is size '0' (like /proc, /sys etc).
+#    fi
+#}
 
 # Returns a color according to running/suspended jobs.
 function job_color()
@@ -202,12 +203,14 @@ case ${TERM} in
   *term* | rxvt | linux)
 	# mark last output
         PS1=${PS1}"\[${BWhite}\]<=\[${NC}\]\n"
-        # Start with time of day
-        PS1=${PS1}"\n\[${Purple}\]\d \@\[${NC}\]"
 	# put some user and host info in.
-        PS1=${PS1}"\n\[${Cyan}\]\u\[${NC}\]@\[${BRed}\]\h\[${NC}\]"
+#        PS1=${PS1}"\n\[${Yellow}\][\[${BCyan}\]\u\[${NC}\]@\[${BBlack}\]\[${On_Cyan}\]\h\[${Yellow}\]]\[${NC}\]"
+        PS1=${PS1}"\n\[${Yellow}\][Host:\[${NC}\]\[${BWhite}\]\[${On_Blue}\]\h\[${Yellow}\] User:\[${SU}\]\u\[${Yellow}\]]\[${NC}\]"
+        # Start with time of day
+        PS1=${PS1}":\[${Yellow}\][\[${Purple}\]\@ \d\[${Yellow}\]]\[${NC}\]"
+        PS1=${PS1}":\[${Yellow}\][cmd:\[${BRed}\]\#\[${Yellow}\] done:\[${Green}\]\!\[${Yellow}\]]\[${NC}\]"
 	# place directory we are working in above the prompt
-	PS1=${PS1}"\n\[${BGreen}\][\w]\[${NC}\]"
+	PS1=${PS1}"\n\[${Green}\][\$(promptpwd)]\[${Yellow}\]:\$(promptls)\[${NC}\]"
 	# set the prompt
 	PS1=${PS1}"\n\[${BWhite}\]=>\[${NC}\]"
         # Set title of current xterm:
@@ -232,10 +235,25 @@ esac
 #+ be converted into scripts and removed from here.
 #
 #============================================================
+promptls () {
+ ls $PWD | tr '\n' '|' 
+}
+
+promptpwd () {
+echo $PWD | tr -d '\n'
+}
 
 #-------------------
 # Personnal Aliases
 #-------------------
+alias pushprofile='scp ~/.bashrc ops:mybashprofile'
+alias submitprofile='ssh ops s3cmd put mybashprofile s3://app.killhup.cx/'
+alias pullprofile='curl -o ~/.bashrc app.killhup.cx/mybashprofile'
+alias showscreen='screen -list'
+alias attach='screen -dr'
+alias dps='docker ps -a'
+alias di='docker images'
+
 
 alias rm='rm -i'
 alias cp='cp -i'
@@ -253,8 +271,8 @@ alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
 
 
-alias du='du -kh'    # Makes a more readable output.
-alias df='df -kTh'
+alias du='du -h'    # Makes a more readable output.
+alias df='df -h'
 
 #-------------------------------------------------------------
 # The 'ls' family (this assumes you use a recent GNU ls).
@@ -299,6 +317,7 @@ alias kk='ll'
 # A few fun ones
 #-------------------------------------------------------------
 export EDITOR=vim
+alias vi='vim'
 
 #-------------------------------------------------------------
 # File & strings related functions:
@@ -752,5 +771,13 @@ complete -F _killall killall killps
 # sh-shell:bash
 # End:
 export CLICOLOR=1
-#export LSCOLORS=ExFxBxDxCxegedabagacad
-export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+export CLICOLOR_FORCE=G
+export LSCOLORS=ExFxBxDxCxegedabagacad
+#export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+export HISTFILESIZE=4096
+export HISTSIZE=2048
+export HISTIGNORE="ls:cd*:pwd:ll:la:history:h:exit:"
+alias clearhistory='echo clear > ~/.bash_history'
+
+export PATH=~/bin:$PATH
+
