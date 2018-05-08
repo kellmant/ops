@@ -1,0 +1,12 @@
+      
+      git config --global user.email "you@example.com"  
+      git config --global user.name "Your Name"
+      to set your account's default identity.
+      
+      Omit --global to set the identity only in this hepositor
+
+git config --global user.name "$USER"  
+git config --global user.email "$USER@here.com"  
+git config --global http.sslCert "/tls/$BUDDY.cert.pem"    
+git config --global http.sslKey "/tls/$BUDDY.key.pem"  
+git config --global credential.helper store 
