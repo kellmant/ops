@@ -7,12 +7,15 @@ credentials
 .renvrc
 .s3cfg
 .sessionkey
+.tmux.conf
 .vim*
 KEYSTORE*
 .cache
 .rnd
 *.pem
 *.crt
+tt
+tt.js
 playground/*
 !playground/README.md
 .gitconfig
