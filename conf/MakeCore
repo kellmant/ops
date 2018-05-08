@@ -1,1 +1,23 @@
-../../MakeCore
+#!/bin/bash
+#
+source /efs/deploy/.corebuild
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd ${DIR}
+jobstart "$$"
+trap "jobtrace '$$'" 0 1 2 3 6
+
+
+builds=($(find $DIR -maxdepth 1 -type d | sort))
+for i in "${builds[@]}" ; do
+if [ -f $i/MakeUnits ] ; then
+echo "We have something to build in $i"
+cd $i/
+./MakeUnits
+cd ..
+else
+continue
+fi
+
+done
+
+exit 0

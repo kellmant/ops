@@ -1,1 +1,28 @@
-../../BuildCore.service
+[Unit]
+Description=%p for %i 
+
+# Requirements
+
+# Dependency ordering
+
+
+[Service]
+EnvironmentFile=/etc/environment
+TimeoutStartSec=0
+KillMode=none
+Type=oneshot
+ExecStartPre=-/bin/bash -c 'echo "LOCALDOMAIN=$(curl http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.region' | cut -d '-' -f 2- | tr -d '-')" > /efs/services/.localdomain'
+ExecStartPre=-/bin/bash -c 'etcdctl set env/global/localaz "$(curl http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.region' | cut -d '-' -f 2- | tr -d '-')"'
+#ExecStartPre=-/usr/bin/sudo sh -c 'cp /efs/vol/plex/latestplex.tar.gz /mnt/'
+#ExecStartPre=-/usr/bin/sudo sh -c 'cd /mnt ; tar xzf latestplex.tar.gz'
+#ExecStartPre=-/usr/bin/sudo sh -c 'mkdir -p /mnt/transcode'
+#ExecStartPre=-/usr/bin/sudo sh -c 'chown -R 800.800 /mnt/transcode'
+#ExecStartPre=-/bin/bash -c 'rm -rf /efs/services/nginx/*'
+#ExecStartPre=-/bin/bash -c 'cp -rf /efs/deploy/nginx-sdn/* /efs/services/nginx/'
+#ExecStartPre=-/usr/bin/sudo sh -c 'chown -R 500.500 /efs/services/nginx'
+
+
+ExecStart=/bin/bash -c '/efs/deploy/MakeCore'
+
+[X-Fleet]
+MachineMetadata=situation=core-a
