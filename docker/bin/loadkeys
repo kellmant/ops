@@ -1,0 +1,35 @@
+#!/bin/bash
+#set -eo pipefail
+source /.IPS
+if [ -z ${1} ] ; then
+    echo " load a KEYSTORE file " 
+    exit 1
+fi
+
+jobstart "$$"
+trap "jobtrace '$$'" 0 1 2 3 6
+
+IFS=$'\n'
+
+echo 
+echo " Restoring keystore from ${1} . . . "
+echo
+
+formatfile="${1}"
+cnt=0
+INKEYS=($(cat ${formatfile})) || { echo "${1} not a file" ; exit 1 ; }
+for (( i=0; i<${#INKEYS[@]}; i++ )) ; do
+    tfile="${INKEYS[$i]}"
+    element=$(echo ${tfile} | cut -d '=' -f 1)
+    vals="$(echo ${tfile} | cut -d '=' -f 2-)"
+        (( cnt++ ))
+        tput sc
+        tput el
+        echo -en "${BYellow} loading => ${BWhite}$cnt ${BBlue} $element ${NC}"
+        etcdctl set ${element} "${vals}" &> /dev/null
+        tput rc
+done
+echo
+        echo -e "${BWhite}    $cnt ${BGreen}values loaded into local keystore.${NC}"
+        echo
+

@@ -1,0 +1,22 @@
+#!/bin/bash
+#set -eo pipefail
+set -a
+source /.IPS
+
+if [ -z ${1} ] ; then
+    exit
+fi
+
+u_confirm "Remove ALL keys in $1 ? " 
+if [ $? -eq 1 ] ; then
+msgbus "keys were spared by $BUDDY just now in ${1} ${NC}"
+echo "chicken"
+echo
+exit 1
+else
+etcdctl rm --recursive ${1}
+msgbus "$1 keys gone at that the hands of $BUDDY ${NC}" 
+fi
+exit 0
+
+
