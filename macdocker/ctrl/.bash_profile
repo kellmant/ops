@@ -539,10 +539,10 @@ export PS1=""
 PROMPT_COMMAND=""
 if [ -f /.dockerenv ] ; then
 	systype="ACTIVE CONTAINER"
-	sysback="${On_Red}"
+	sysback="${On_Blue}"
 	else
 	systype="host"
-	sysback="${On_Blue}"
+	sysback="${On_Red}"
 fi
 
 trap 'timer_start' DEBUG
@@ -870,13 +870,33 @@ export PATH=~/bin:/node/bin:$PATH
 
 # User specific aliases and functions
 
-export CLICOLOR=1
-export CLICOLOR_FORCE=G
-export LSCOLORS=ExFxBxDxCxegedabagacad
-#export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
-
 
 TZ='America/Toronto'
 export TZ
 
-echo "Dropping you to shell, run 'aws configure' and 'cpconfig' if this is first time setup."
+if [ ! -d ~/.vim ] ; then
+	echo
+	echo "Setting up vim editor enviroment . . . "
+	echo
+	mkdir -p ~/.vim/autoload 
+	mkdir -p ~/.vim/bundle 
+	cd ~
+	curl -s -o .vim/autoload/pathogen.vim -L https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim 
+	cd .vim/bundle
+	git clone https://github.com/plasticboy/vim-markdown
+	git clone https://github.com/pangloss/vim-javascript
+	git clone https://github.com/klen/python-mode
+	git clone https://github.com/ekalinin/dockerfile.vim
+	git clone https://github.com/othree/html5.vim
+	git clone https://github.com/elzr/vim-json
+	git clone git://github.com/altercation/vim-colors-solarized.git 
+	cd /ctrl
+	echo
+	echo "vim setup complete"
+	echo
+fi
+
+echo "Dropping to shell . . "
+echo
+
+

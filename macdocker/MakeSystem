@@ -1,9 +1,10 @@
 #!/bin/bash
-buildobj="myapp"
+buildobj="kellman/devshell"
 buildstage="latest"
 
 docker rmi ${buildobj}:${buildstage}
 docker build -t ${buildobj}:${buildstage} .
-#docker push ${buildobj}:${buildstage}
-docker run --rm -h $buildobj --name $buildobj -v $PWD/ctrl:/ctrl -it ${buildobj}:${buildstage}
+docker push ${buildobj}:${buildstage}
+#docker run --rm -h $buildobj --name $buildobj -v $PWD/ctrl:/ctrl -it ${buildobj}:${buildstage}
+docker run --rm -h myshell --name myshell -it ${buildobj}:${buildstage}
 

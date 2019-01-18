@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+#
+if [ ! -f ~/.sessionkey ] ; then
+	echo "no session generated"
+	echo
+	exit 0
+fi
+
+if [ ! -d ~/.aws ] ; then
+	echo "no aws access configured"
+	echo
+	exit 0
+fi
+
+SKEY=$(cat ~/.sessionkey)
+
+    if [ "$1" == "off" ] ; then
+        regions=($(aws ec2 describe-regions | jq -r '.Regions[].RegionName'))
+            for (( r=0; r<${#regions[@]}; r++ )) ; do
+                region=$(echo "${regions[$r]}" | cut -d '/' -f 4)
+                aws ec2 delete-key-pair --region $region --key-name $SKEY
+                if [ $? -eq 0 ] ; then
+                    echo "Removed $KEY key in region $region"
+                else
+                    echo "none 0 exit removing key $SKEY in region $region"
+                fi
+            done
+        exit
+
+    else
+        PUBKEY=(`cat ${HOME}/.ssh/${SKEY}.pub | grep -v PUBLIC | tr -d '\n'`)
+        regions=($(aws ec2 describe-regions | jq -r '.Regions[].RegionName'))
+            for (( r=0; r<${#regions[@]}; r++ )) ; do
+                region=$(echo "${regions[$r]}" | cut -d '/' -f 4)
+                eval "aws ec2 import-key-pair --region $region --key-name ${SKEY} --public-key-material ${PUBKEY[@]}"
+            done
+        exit
+    fi
+

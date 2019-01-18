@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+#
+# Generate random marker
+# head -c 256 /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 32
+# 32 character output
+#
+set -a
+
+IFS=$'\n'
+
+SESSIONKEY=(`cat ~/.sessionkey`)
+SNAME=$(echo $SESSIONKEY | cut -d '-' -f 3)
+BUDDY=$(whoami)
+$HOME/bin/awsauth off
+
+keyprefix="$HOME/.ssh"
+rm -rf $keyprefix/${SESSIONKEY}*
+rm -rf ${HOME}/.sessionkey
+echo "Exit to reset enviroment,"
+
+exit
+# end of kill code
